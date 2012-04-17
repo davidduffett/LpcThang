@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>LpcThang</id>
+	<version>0.0.0</version>
+    <authors>David Duffett</authors>
+    <owners>David Duffett</owners>
+    <licenseUrl>https://github.com/davidduffett/LpcThang/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/davidduffett/LpcThang</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>LivePerson Chat ASP.NET MVC Helper methods</description>
+    <copyright>Copyright 2012</copyright>
+    <tags>liveperson chat</tags>
+  </metadata>
+  <files>
+	<file src="artifacts\publish\LpcThang.dll" target="lib\net40" />
+  </files>
+</package>
