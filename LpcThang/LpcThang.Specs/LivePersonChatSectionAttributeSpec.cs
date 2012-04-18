@@ -24,36 +24,16 @@ namespace LpcThang.Specs
     public class When_action_is_executing_with_live_person_chat_section : LivePersonChatSectionAttributeContext
     {
         It should_set_live_person_chat_section_for_the_request = () =>
-            LivePersonChat.Current.PageVariables[LpcVariables.Section].ShouldEqual(Section);
+            LivePersonChat.Current.PageVariables["Section"].ShouldEqual(Section);
     }
 
     [Subject(typeof(LivePersonChatSectionAttribute))]
     public class When_child_action_is_executing_with_live_person_chat_section : LivePersonChatSectionAttributeContext
     {
         It should_not_set_live_person_chat_section_for_the_request = () =>
-            LivePersonChat.Current.PageVariables.Keys.ShouldNotContain(LpcVariables.Section);
+            LivePersonChat.Current.PageVariables.Keys.ShouldNotContain("Section");
 
         Establish context = () =>
             ActionContext.WhenToldTo(x => x.IsChildAction).Return(true);
-    }
-
-    [Subject(typeof(LivePersonChatSectionAttribute))]
-    public class When_action_is_executing_with_blank_live_person_chat_section : LivePersonChatSectionAttributeContext
-    {
-        It should_not_set_live_person_chat_section_for_the_request = () =>
-            LivePersonChat.Current.PageVariables.Keys.ShouldNotContain(LpcVariables.Section);
-
-        Establish context = () =>
-            SUT = new LivePersonChatSectionAttribute("");
-    }
-
-    [Subject(typeof(LivePersonChatSectionAttribute))]
-    public class When_action_is_executing_with_null_live_person_chat_section : LivePersonChatSectionAttributeContext
-    {
-        It should_not_set_live_person_chat_section_for_the_request = () =>
-            LivePersonChat.Current.PageVariables.Keys.ShouldNotContain(LpcVariables.Section);
-
-        Establish context = () =>
-            SUT = new LivePersonChatSectionAttribute(null);
     }
 }

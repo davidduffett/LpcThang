@@ -45,8 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LivePersonChat.cs" />
+    <Compile Include="LivePersonChatPageVariableAttribute.cs" />
     <Compile Include="LivePersonChatSectionAttribute.cs" />
-    <Compile Include="LpcVariables.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StateStorage.cs" />
   </ItemGroup>

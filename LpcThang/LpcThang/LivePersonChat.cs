@@ -20,6 +20,11 @@ namespace LpcThang
         }
 
         /// <summary>
+        /// Signifies that an order (conversion) has been completed.
+        /// </summary>
+        public bool OrderCompleted { get; set; }
+
+        /// <summary>
         /// LivePersonChat state for the current request.
         /// </summary>
         public static LivePersonChat Current
@@ -48,6 +53,37 @@ namespace LpcThang
         }
 
         /// <summary>
+        /// Page variable name which is set with a value of 1 when an order is completed.
+        /// Can be overridden by setting this field.
+        /// </summary>
+        public static string SalesOrderCompletedVariable = "OrderTotal";
+        /// <summary>
+        /// Page variable name used for eCommerce order totals.
+        /// Can be overridden by setting this field.
+        /// </summary>
+        public static string SalesOrderTotalVariable = "sales_OrderTotal";
+        /// <summary>
+        /// Page variable name used for the order number when an order is completed.
+        /// Can be overridden by setting this field.
+        /// </summary>
+        public static string SalesOrderNumberVariable = "OrderNumber";
+
+        /// <summary>
+        /// Signifies that an order (conversion) has been completed.
+        /// This adds page variables for the order total and order number, and includes a script
+        /// at the end of the page notifying LivePerson of the conversion.
+        /// </summary>
+        /// <param name="orderNumber">Your order number.</param>
+        /// <param name="orderTotal">Total value of the order.</param>
+        public static void SetOrderCompleted(string orderNumber, decimal orderTotal)
+        {
+            AddPageVariable(SalesOrderCompletedVariable, 1);
+            AddPageVariable(SalesOrderNumberVariable, orderNumber);
+            AddPageVariable(SalesOrderTotalVariable, orderTotal);
+            Current.OrderCompleted = true;
+        }
+
+        /// <summary>
         /// Renders the required JavaScript onto the page for LivePerson chat, including all specified LP variables.
         /// Ensure that you include your client-specific mtagconfig.js script reference before this.
         /// Recommended to include this inside the body element at the bottom of the page.
@@ -62,6 +98,9 @@ namespace LpcThang
 
             addPageVariableScripts(script);
 
+            if (Current.OrderCompleted)
+                addTagLoadedScript(script);
+
             script.AppendLine(@"</script>");
 
             return new HtmlString(script.ToString());
@@ -72,6 +111,14 @@ namespace LpcThang
             const string lpAddVars = "lpAddVars(\"page\",\"{0}\",\"{1}\");";
             foreach (var kvp in Current.PageVariables)
                 script.AppendLine(string.Format(lpAddVars, kvp.Key, kvp.Value));
+        }
+
+        private static void addTagLoadedScript(StringBuilder script)
+        {
+            const string tagLoadedScript =
+                @"if(typeof lpMTagConfig.lpTagLoaded != 'undefined' && (!lpMTagConfig.lpTagLoaded)) " +
+                @"{ lpMTagConfig.sendCookies=false; lpAddMonitorTag(); lpMTagConfig.lpTagLoaded=true; }";
+            script.AppendLine(tagLoadedScript);
         }
     }
 }

@@ -1,24 +1,17 @@
-﻿using System.Web.Mvc;
+﻿using System;
 
 namespace LpcThang
 {
     /// <summary>
     /// Action filter attribute that can be applied to an entire controller or a single action method,
-    /// specifying which LivePerson Chat section the current action belongs to.
+    /// specifying which LivePerson Chat sectionName the current action belongs to.
     /// </summary>
-    public class LivePersonChatSectionAttribute : ActionFilterAttribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
+    public class LivePersonChatSectionAttribute : LivePersonChatPageVariableAttribute
     {
-        private readonly string _section;
-
-        public LivePersonChatSectionAttribute(string section)
+        public LivePersonChatSectionAttribute(string sectionName)
+            : base("Section", sectionName)
         {
-            _section = section;
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            if (!filterContext.IsChildAction && !string.IsNullOrWhiteSpace(_section))
-                LivePersonChat.AddPageVariable(LpcVariables.Section, _section);
         }
     }
 }

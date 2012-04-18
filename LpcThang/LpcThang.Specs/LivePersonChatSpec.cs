@@ -65,4 +65,33 @@ namespace LpcThang.Specs
             LivePersonChat.AddPageVariable("OrderTotal", 12.99m);
         };
     }
+
+    [Subject(typeof(LivePersonChat))]
+    public class When_setting_order_completed : LivePersonChatContext
+    {
+        It should_set_order_completed_to_true = () =>
+            LivePersonChat.Current.OrderCompleted.ShouldBeTrue();
+
+        It should_add_page_variable_for_order_completion_flag = () =>
+            LivePersonChat.Current.PageVariables[LivePersonChat.SalesOrderCompletedVariable].ShouldEqual(1);
+
+        It should_add_page_variable_for_order_total = () =>
+            LivePersonChat.Current.PageVariables[LivePersonChat.SalesOrderTotalVariable].ShouldEqual(12.99m);
+
+        It should_add_page_variable_for_order_number = () =>
+            LivePersonChat.Current.PageVariables[LivePersonChat.SalesOrderNumberVariable].ShouldEqual("123456");
+
+        Because of = () =>
+            LivePersonChat.SetOrderCompleted("123456", 12.99m);
+    }
+
+    [Subject(typeof(LivePersonChat))]
+    public class When_rendering_live_person_javascript_and_order_is_completed : LivePersonChatRenderContext
+    {
+        It should_include_lpTagLoaded_script = () =>
+            Result.ShouldContain("lpMTagConfig.lpTagLoaded=true;");
+
+        Establish context = () =>
+            LivePersonChat.SetOrderCompleted("123456", 12.99m);
+    }
 }
